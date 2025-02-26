@@ -450,7 +450,7 @@ const Dashboard = ({ token }) => {
 
   const fetchAnalytics = async () => {
     try {
-      const response = await fetch('https://email-tracking-server.onrender.com/analytics', {
+      const response = await fetch('https://emailtracking-server.onrender.com/analytics', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -464,7 +464,7 @@ const Dashboard = ({ token }) => {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch('https://email-tracking-server.onrender.com/events', {
+      const response = await fetch('https://emailtracking-server.onrender.com/events', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();

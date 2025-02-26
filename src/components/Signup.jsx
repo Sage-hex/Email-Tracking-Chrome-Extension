@@ -73,7 +73,7 @@ const Signup = ({ switchToLogin }) => {
   const handleSignup = async () => {
     try {
       await axios.post(
-        'https://email-tracking-server.onrender.com/auth/signup',
+        'https://emailtracking-server.onrender.com/auth/signup',
         { username, email, password },
         { headers: { 'Content-Type': 'application/json' } }
       );
