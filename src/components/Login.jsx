@@ -53,6 +53,7 @@ import {
   Typography,
   Box,
   Alert,
+  LinearProgress,
 } from '@mui/material';
 
 const Login = ({ onLoginSuccess, switchToSignup }) => {
