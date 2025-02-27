@@ -400,20 +400,72 @@
 
 // src/App.jsx
 
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
+// import Login from './components/Login';
+// import Signup from './components/Signup';
+// import Dashboard from './components/Dashboard';
+// import { Container, Typography } from '@mui/material';
+
+// function App() {
+//   // Load token from localStorage if available
+//   const [token, setToken] = useState(localStorage.getItem('jwtToken') || null);
+//   // State to toggle between login and signup screens
+//   const [showSignup, setShowSignup] = useState(false);
+
+//   const handleLoginSuccess = (jwtToken) => {
+//     setToken(jwtToken);
+//   };
+
+//   const switchToSignup = () => {
+//     setShowSignup(true);
+//   };
+
+//   const switchToLogin = () => {
+//     setShowSignup(false);
+//   };
+
+//   return (
+//     <Container maxWidth="lg">
+//       {!token ? (
+//         <>
+//           <Typography variant="h4" component="h1" sx={{ mt: 4, textAlign: 'center' }}>
+//             Welcome to Email Tracker
+//           </Typography>
+//           {showSignup ? (
+//             <Signup switchToLogin={switchToLogin} />
+//           ) : (
+//             <Login onLoginSuccess={handleLoginSuccess} switchToSignup={switchToSignup} />
+//           )}
+//         </>
+//       ) : (
+//         <Dashboard token={token} />
+//       )}
+//     </Container>
+//   );
+// }
+
+// export default App;
+
+
+
+import React, { useState, useEffect } from 'react';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Dashboard from './components/Dashboard';
 import { Container, Typography } from '@mui/material';
 
 function App() {
-  // Load token from localStorage if available
   const [token, setToken] = useState(localStorage.getItem('jwtToken') || null);
-  // State to toggle between login and signup screens
   const [showSignup, setShowSignup] = useState(false);
 
-  const handleLoginSuccess = (jwtToken) => {
+  const handleLoginSuccess = (jwtToken, user) => {
     setToken(jwtToken);
+    localStorage.setItem('jwtToken', jwtToken);
+    localStorage.setItem('loggedInUserEmail', user.email); // Save the user's email
+    chrome.runtime.sendMessage({
+      type: 'SET_LOGGED_IN_USER',
+      payload: { email: user.email },
+    });
   };
 
   const switchToSignup = () => {
@@ -424,6 +476,13 @@ function App() {
     setShowSignup(false);
   };
 
+  const logout = () => {
+    setToken(null);
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('loggedInUserEmail');
+    chrome.runtime.sendMessage({ type: 'LOGOUT' });
+  };
+
   return (
     <Container maxWidth="lg">
       {!token ? (
@@ -432,21 +491,19 @@ function App() {
             Welcome to Email Tracker
           </Typography>
           {showSignup ? (
-            <Signup switchToLogin={switchToLogin} />
+            <Signup switchToLogin={switchToLogin} onLoginSuccess={handleLoginSuccess} />
           ) : (
             <Login onLoginSuccess={handleLoginSuccess} switchToSignup={switchToSignup} />
           )}
         </>
       ) : (
-        <Dashboard token={token} />
+        <Dashboard token={token} logout={logout} />
       )}
     </Container>
   );
 }
 
 export default App;
-
-
 
 
 
